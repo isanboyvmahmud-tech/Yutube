@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube - Bosh sahifa</title>
+  <!-- Favicon -->
+  <link rel="icon" href="https://www.youtube.com/s/desktop/d743f786/img/favicon.ico" type="image/x-icon">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            yt: {
+              red: '#FF0000',
+              darkBg: '#0F0F0F',
+              cardDark: '#212121',
+              hoverDark: '#272727',
+              borderDark: '#3F3F3F',
+              lightBg: '#FFFFFF',
+              cardLight: '#F2F2F2',
+              hoverLight: '#E5E5E5',
+              textMuted: '#AAAAAA'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Lucide Icons & FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#0f0f0f] text-white selection:bg-red-600 selection:text-white transition-colors duration-200 overflow-x-hidden font-sans">
+
+  <!-- ================= TOP NAVBAR ================= -->
+  <header class="fixed top-0 left-0 right-0 h-14 bg-[#0f0f0f] border-b border-[#272727] z-50 flex items-center justify-between px-4 select-none">
+    
+    <!-- Left: Hamburger & Logo -->
+    <div class="flex items-center gap-4">
+      <button id="sidebarToggleBtn" class="p-2 rounded-full hover:bg-[#272727] active:bg-[#383838] transition text-lg w-10 h-10 flex items-center justify-center" title="Menyu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a href="#" id="logoBtn" class="flex items-center gap-1 group py-1">
+        <div class="relative flex items-center">
+          <i class="fa-brands fa-youtube text-red-600 text-3xl group-hover:scale-105 transition-transform"></i>
+        </div>
+        <span class="font-bold tracking-tighter text-xl text-white ml-0.5 font-['Oswald',sans-serif]">YouTube</span>
+        <span class="text-[10px] text-gray-400 font-semibold self-start ml-0.5">UZ</span>
+      </a>
+    </div>
+
+    <!-- Center: Search Bar & Mic -->
+    <div class="flex-1 max-w-2xl mx-4 hidden sm:flex items-center justify-center">
+      <form id="searchForm" class="flex items-center w-full max-w-xl relative">
+        <div class="flex items-center w-full bg-[#121212] border border-[#303030] rounded-l-full px-4 py-1.5 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all">
+          <i class="fa-solid fa-magnifying-glass text-gray-400 mr-2 text-sm"></i>
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Qidiruv..." 
+            class="w-full bg-transparent outline-none text-sm placeholder-gray-500 text-white"
+            autocomplete="off"
+          />
+          <button type="button" id="clearSearchBtn" class="hidden text-gray-400 hover:text-white text-xs mr-1 p-1">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <button type="submit" class="bg-[#222222] hover:bg-[#272727] border border-l-0 border-[#303030] rounded-r-full px-6 py-2 transition" title="Qidirish">
+          <i class="fa-solid fa-magnifying-glass text-gray-300 text-sm"></i>
+        </button>
+
+        <!-- Voice Search Button -->
+        <button type="button" id="voiceSearchBtn" class="ml-3 p-2.5 rounded-full bg-[#222222] hover:bg-[#272727] active:bg-red-950 transition text-sm w-10 h-10 flex items-center justify-center shrink-0" title="Ovozli qidiruv">
+          <i class="fa-solid fa-microphone text-white"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- Right: Actions & User -->
+    <div class="flex items-center gap-1 sm:gap-2">
+      <!-- Mobile Search Icon -->
+      <button id="mobileSearchBtn" class="sm:hidden p-2 rounded-full hover:bg-[#272727] transition w-10 h-10 flex items-center justify-center" title="Qidiruv">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+
+      <!-- Theme Switcher -->
+      <button id="themeToggleBtn" class="p-2 rounded-full hover:bg-[#272727] transition w-10 h-10 flex items-center justify-center text-yellow-400" title="Mavzuni almashtirish">
+        <i class="fa-solid fa-sun" id="themeIcon"></i>
+      </button>
+
+      <!-- Create / Upload Video Button -->
+      <button id="createVideoBtn" class="flex items-center gap-2 bg-[#272727] hover:bg-[#383838] px-3.5 py-1.5 rounded-full text-sm font-medium transition active:scale-95">
+        <i class="fa-solid fa-plus text-red-500 font-bold"></i>
+        <span class="hidden md:inline">Yaratish</span>
+      </button>
+
+      <!-- Notifications -->
+      <div class="relative">
+        <button id="notificationsBtn" class="p-2 rounded-full hover:bg-[#272727] transition w-10 h-10 flex items-center justify-center relative" title="Xabarlar">
+          <i class="fa-regular fa-bell text-lg"></i>
+          <span class="absolute top-1.5 right-1.5 bg-red-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">4</span>
+        </button>
+        <!-- Notifications Dropdown -->
+        <div id="notificationsDropdown" class="hidden absolute right-0 mt-2 w-80 bg-[#282828] border border-[#3f3f3f] rounded-xl shadow-2xl overflow-hidden z-50">
+          <div class="p-3 border-b border-[#3f3f3f] flex items-center justify-between">
+            <h3 class="font-semibold text-sm">Xabarlar</h3>
+            <button class="text-xs text-blue-400 hover:underline">O'qilgan deb belgilash</button>
+          </div>
+          <div class="max-h-80 overflow-y-auto divide-y divide-[#383838] text-xs">
+            <div class="p-3 hover:bg-[#333333] transition flex gap-3 cursor-pointer">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="w-9 h-9 rounded-full object-cover shrink-0" alt="Avatar">
+              <div>
+                <p class="font-semibold text-white">Mohirdev yangi video yukladi: <span class="font-normal text-gray-300">JavaScript Masterclass #14</span></p>
+                <span class="text-[10px] text-gray-400">12 daqiqa oldin</span>
+              </div>
+            </div>
+            <div class="p-3 hover:bg-[#333333] transition flex gap-3 cursor-pointer">
+              <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100" class="w-9 h-9 rounded-full object-cover shrink-0" alt="Avatar">
+              <div>
+                <p class="font-semibold text-white">KiberDunyo: <span class="font-normal text-gray-300">Sun'iy intellekt bo'yicha katta yangilik!</span></p>
+                <span class="text-[10px] text-gray-400">1 soat oldin</span>
+              </div>
+            </div>
+            <div class="p-3 hover:bg-[#333333] transition flex gap-3 cursor-pointer">
+              <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100" class="w-9 h-9 rounded-full object-cover shrink-0" alt="Avatar">
+              <div>
+                <p class="font-semibold text-white">IT Park Uzbekistan jonli efir boshladi!</p>
+                <span class="text-[10px] text-red-500 font-bold">● JONLI EFIR</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Avatar / Profile Dropdown -->
+      <div class="relative">
+        <button id="userProfileBtn" class="flex items-center gap-1 pl-1 focus:outline-none">
+          <img 
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" 
+            alt="Profil" 
+            class="w-8 h-8 rounded-full border border-gray-600 object-cover ring-2 ring-transparent hover:ring-red-500 transition"
+          />
+        </button>
+        <!-- Profile Dropdown Menu -->
+        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-64 bg-[#282828] border border-[#3f3f3f] rounded-xl shadow-2xl p-2 z-50 text-sm">
+          <div class="flex items-center gap-3 p-3 border-b border-[#3f3f3f] mb-1">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120" class="w-10 h-10 rounded-full object-cover" alt="Avatar">
+            <div>
+              <p class="font-semibold text-white">Dasturchi User</p>
+              <p class="text-xs text-gray-400">@dasturchi_uz</p>
+              <a href="#" class="text-xs text-blue-400 hover:underline">Google hisobingiz</a>
+            </div>
+          </div>
+          <a href="#" id="menuYourChannel" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#383838] transition">
+            <i class="fa-regular fa-user text-gray-300 w-5"></i> Kanalingiz
+          </a>
+          <a href="#" id="menuStudio" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#383838] transition">
+            <i class="fa-solid fa-play text-gray-300 w-5"></i> YouTube Studio
+          </a>
+          <a href="#" id="menuSettings" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#383838] transition">
+            <i class="fa-solid fa-gear text-gray-300 w-5"></i> Sozlamalar
+          </a>
+          <div class="border-t border-[#3f3f3f] my-1"></div>
+          <button id="logoutBtn" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-500/20 text-red-400 transition text-left">
+            <i class="fa-solid fa-arrow-right-from-bracket w-5"></i> Chiqish
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Search Overlay (Hidden by default) -->
+  <div id="mobileSearchOverlay" class="fixed inset-x-0 top-0 h-14 bg-[#0f0f0f] z-50 hidden items-center px-3 border-b border-[#272727]">
+    <button id="closeMobileSearchBtn" class="p-2 mr-2 text-gray-300">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+    <form id="mobileSearchForm" class="flex-1 flex items-center">
+      <input 
+        type="text" 
+        id="mobileSearchInput" 
+        placeholder="YouTube-da qidiruv..." 
+        class="w-full bg-[#1e1e1e] border border-[#333] rounded-full px-4 py-1.5 text-sm text-white outline-none focus:border-blue-500"
+      />
+    </form>
+  </div>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <div class="flex pt-14 min-h-screen">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside id="mainSidebar" class="fixed left-0 top-14 bottom-0 w-60 bg-[#0f0f0f] border-r border-[#272727] overflow-y-auto px-3 py-2 transition-all duration-300 z-40 custom-scrollbar select-none">
+      
+      <!-- Section 1: Main Navigation -->
+      <div class="space-y-1 pb-3 border-b border-[#272727]">
+        <button data-nav="home" class="nav-item active flex items-center gap-6 w-full px-3 py-2.5 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-solid fa-house text-lg w-5 text-center"></i>
+          <span class="nav-label">Bosh sahifa</span>
+        </button>
+        <button data-nav="shorts" class="nav-item flex items-center gap-6 w-full px-3 py-2.5 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-solid fa-bolt text-lg w-5 text-center text-red-500"></i>
+          <span class="nav-label">Shorts</span>
+        </button>
+        <button data-nav="subscriptions" class="nav-item flex items-center gap-6 w-full px-3 py-2.5 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-solid fa-layer-group text-lg w-5 text-center"></i>
+          <span class="nav-label">Obunalar</span>
+        </button>
+      </div>
+
+      <!-- Section 2: You (Siz) -->
+      <div class="py-3 border-b border-[#272727] space-y-1">
+        <div class="flex items-center justify-between px-3 py-1">
+          <span class="font-bold text-sm tracking-wide text-gray-200 nav-heading">Siz <i class="fa-solid fa-chevron-right text-xs ml-1"></i></span>
+        </div>
+        <button data-nav="history" class="nav-item flex items-center gap-6 w-full px-3 py-2 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-solid fa-clock-rotate-left text-base w-5 text-center"></i>
+          <span class="nav-label">Tarix</span>
+        </button>
+        <button data-nav="my-videos" class="nav-item flex items-center gap-6 w-full px-3 py-2 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-solid fa-film text-base w-5 text-center"></i>
+          <span class="nav-label">Videolaringiz</span>
+        </button>
+        <button data-nav="watch-later" class="nav-item flex items-center gap-6 w-full px-3 py-2 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-regular fa-clock text-base w-5 text-center"></i>
+          <span class="nav-label">Keyinroq ko'rish</span>
+        </button>
+        <button data-nav="liked" class="nav-item flex items-center gap-6 w-full px-3 py-2 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-regular fa-thumbs-up text-base w-5 text-center"></i>
+          <span class="nav-label">Yoqqan videolar</span>
+        </button>
+      </div>
+
+      <!-- Section 3: Subscribed Channels -->
+      <div class="py-3 border-b border-[#272727] space-y-1 nav-subs-section">
+        <h4 class="text-xs font-bold text-gray-400 px-3 uppercase tracking-wider mb-2 nav-heading">Obunalar</h4>
+        <div id="subscriptionsList" class="space-y-0.5">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Section 4: Explore -->
+      <div class="py-3 border-b border-[#272727] space-y-1 nav-explore-section">
+        <h4 class="text-xs font-bold text-gray-400 px-3 uppercase tracking-wider mb-2 nav-heading">Kashf qiling</h4>
+        <button data-category="trend" class="category-sidebar-btn flex items-center gap-6 w-full px-3 py-2 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-solid fa-fire text-base w-5 text-center text-orange-500"></i>
+          <span class="nav-label">Trendlar</span>
+        </button>
+        <button data-category="music" class="category-sidebar-btn flex items-center gap-6 w-full px-3 py-2 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-solid fa-music text-base w-5 text-center text-emerald-400"></i>
+          <span class="nav-label">Musiqa</span>
+        </button>
+        <button data-category="gaming" class="category-sidebar-btn flex items-center gap-6 w-full px-3 py-2 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-solid fa-gamepad text-base w-5 text-center text-purple-400"></i>
+          <span class="nav-label">O'yinlar</span>
+        </button>
+        <button data-category="tech" class="category-sidebar-btn flex items-center gap-6 w-full px-3 py-2 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-solid fa-laptop-code text-base w-5 text-center text-blue-400"></i>
+          <span class="nav-label">Dasturlash</span>
+        </button>
+        <button data-category="news" class="category-sidebar-btn flex items-center gap-6 w-full px-3 py-2 rounded-xl hover:bg-[#272727] text-sm font-medium transition text-left">
+          <i class="fa-regular fa-newspaper text-base w-5 text-center text-yellow-400"></i>
+          <span class="nav-label">Yangiliklar</span>
+        </button>
+      </div>
+
+      <!-- Footer text in sidebar -->
+      <div class="py-4 px-3 text-[11px] text-gray-500 space-y-2 nav-footer">
+        <div class="flex flex-wrap gap-x-2 gap-y-1">
+          <a href="#" class="hover:underline">Haqida</a>
+          <a href="#" class="hover:underline">Matbuot</a>
+          <a href="#" class="hover:underline">Mualliflik huquqi</a>
+          <a href="#" class="hover:underline">Bog'lanish</a>
+          <a href="#" class="hover:underline">Dasturchilar</a>
+        </div>
+        <p>© 2026 YouTube LLC (Uzbekistan)</p>
+      </div>
+    </aside>
+
+    <!-- Mini Sidebar for collapsed mode (Optional icons only) -->
+    <aside id="miniSidebar" class="hidden fixed left-0 top-14 bottom-0 w-[72px] bg-[#0f0f0f] border-r border-[#272727] py-2 z-40 flex-col items-center select-none">
+      <button data-nav="home" class="mini-nav-item active flex flex-col items-center justify-center w-16 py-3 rounded-xl hover:bg-[#272727] text-[10px] gap-1 transition">
+        <i class="fa-solid fa-house text-lg"></i>
+        <span>Bosh sahifa</span>
+      </button>
+      <button data-nav="shorts" class="mini-nav-item flex flex-col items-center justify-center w-16 py-3 rounded-xl hover:bg-[#272727] text-[10px] gap-1 transition">
+        <i class="fa-solid fa-bolt text-lg text-red-500"></i>
+        <span>Shorts</span>
+      </button>
+      <button data-nav="subscriptions" class="mini-nav-item flex flex-col items-center justify-center w-16 py-3 rounded-xl hover:bg-[#272727] text-[10px] gap-1 transition">
+        <i class="fa-solid fa-layer-group text-lg"></i>
+        <span>Obunalar</span>
+      </button>
+      <button data-nav="history" class="mini-nav-item flex flex-col items-center justify-center w-16 py-3 rounded-xl hover:bg-[#272727] text-[10px] gap-1 transition">
+        <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+        <span>Siz</span>
+      </button>
+    </aside>
+
+    <!-- ================= MAIN CONTENT WRAPPER ================= -->
+    <main id="mainContent" class="flex-1 ml-60 transition-all duration-300 min-w-0">
+
+      <!-- ================= VIEW 1: HOME FEED ================= -->
+      <section id="homeView" class="p-4 md:p-6 block">
+
+        <!-- Top Category Filter Pills -->
+        <div class="sticky top-14 bg-[#0f0f0f] z-30 pb-3 pt-1 -mx-4 px-4 md:-mx-6 md:px-6 flex items-center gap-2.5 overflow-x-auto no-scrollbar" id="categoryPillsContainer">
+          <button class="category-pill active px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition shrink-0 bg-white text-black hover:bg-gray-200" data-category="all">
+            Barchasi
+          </button>
+          <button class="category-pill px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium transition shrink-0 bg-[#272727] text-white hover:bg-[#383838]" data-category="dasturlash">
+            Dasturlash
+          </button>
+          <button class="category-pill px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium transition shrink-0 bg-[#272727] text-white hover:bg-[#383838]" data-category="ai">
+            Sun'iy Intellekt
+          </button>
+          <button class="category-pill px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium transition shrink-0 bg-[#272727] text-white hover:bg-[#383838]" data-category="musiqa">
+            Musiqa
+          </button>
+          <button class="category-pill px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium transition shrink-0 bg-[#272727] text-white hover:bg-[#383838]" data-category="oyinlar">
+            O'yinlar
+          </button>
+          <button class="category-pill px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium transition shrink-0 bg-[#272727] text-white hover:bg-[#383838]" data-category="yangiliklar">
+            Yangiliklar
+          </button>
+          <button class="category-pill px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium transition shrink-0 bg-[#272727] text-white hover:bg-[#383838]" data-category="kino">
+            Kino & Seriallar
+          </button>
+          <button class="category-pill px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium transition shrink-0 bg-[#272727] text-white hover:bg-[#383838]" data-category="talim">
+            Ta'lim
+          </button>
+          <button class="category-pill px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium transition shrink-0 bg-[#272727] text-white hover:bg-[#383838]" data-category="sayohat">
+            Sayohat & Tabiat
+          </button>
+          <button class="category-pill px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium transition shrink-0 bg-[#272727] text-white hover:bg-[#383838]" data-category="podkast">
+            Podkastlar
+          </button>
+        </div>
+
+        <!-- Home Banner Promo (Optional cool aesthetic touch) -->
+        <div id="homeBanner" class="relative rounded-2xl overflow-hidden mb-6 p-6 bg-gradient-to-r from-red-950 via-zinc-900 to-[#181818] border border-red-900/30 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="space-y-2 max-w-xl">
+            <span class="inline-block bg-red-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Tavsiya etiladi</span>
+            <h2 class="text-xl md:text-2xl font-bold text-white tracking-tight">O'zbekistondagi eng sara IT va Texnologiya videolari</h2>
+            <p class="text-xs md:text-sm text-gray-300">Dasturlash, zamonaviy texnologiyalar va sun'iy intellekt bo'yicha eng yangi videolarni tomosha qiling.</p>
+          </div>
+          <button id="bannerExploreBtn" class="bg-red-600 hover:bg-red-700 text-white font-medium text-xs md:text-sm px-5 py-2.5 rounded-full transition shadow-lg shadow-red-600/30 shrink-0">
+            Kashf etish <i class="fa-solid fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+
+        <!-- Video Cards Grid -->
+        <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-7">
+          <!-- Video Card 1: Konsta -->
+          <div class="video-card cursor-pointer group flex flex-col relative" data-video-id="vid_1">
+            <div class="relative aspect-video w-full rounded-xl overflow-hidden bg-[#202020] mb-3">
+              <img src="https://img.youtube.com/vi/OWg2WTBz3GI/hqdefault.jpg" class="video-card-thumb w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Konsta">
+              <div class="play-overlay absolute inset-0 bg-black/40 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-lg ml-0.5"></i></div>
+              </div>
+              <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[11px] font-semibold px-2 py-0.5 rounded z-10">3:45</span>
+            </div>
+            <div class="flex gap-3 px-1">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" class="w-9 h-9 rounded-full object-cover shrink-0 mt-0.5" alt="Konsta">
+              <div class="flex-1 min-w-0">
+                <h3 class="font-semibold text-sm line-clamp-2 leading-snug group-hover:text-blue-400 transition-colors">Konsta & Timur Alixonov - Odamlar Nima Deydi? (Rasmiy Musiqiy Klip)</h3>
+                <div class="flex items-center gap-1 mt-1 text-xs text-gray-400"><span>Konsta Official</span><i class="fa-solid fa-circle-check text-[10px]"></i></div>
+                <div class="flex items-center gap-1.5 text-xs text-gray-400 mt-0.5"><span>8.2 mln ko'rishlar</span><span>•</span><span>1 oy oldin</span></div>
+              </div>
+            </div>
+          </div>
+          <!-- Video Card 2: Subyektiv -->
+          <div class="video-card cursor-pointer group flex flex-col relative" data-video-id="vid_2">
+            <div class="relative aspect-video w-full rounded-xl overflow-hidden bg-[#202020] mb-3">
+              <img src="https://img.youtube.com/vi/rBmJZhbquyA/hqdefault.jpg" class="video-card-thumb w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Subyektiv">
+              <div class="play-overlay absolute inset-0 bg-black/40 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-lg ml-0.5"></i></div>
+              </div>
+              <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[11px] font-semibold px-2 py-0.5 rounded z-10">48:15</span>
+            </div>
+            <div class="flex gap-3 px-1">
+              <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100" class="w-9 h-9 rounded-full object-cover shrink-0 mt-0.5" alt="Subyektiv">
+              <div class="flex-1 min-w-0">
+                <h3 class="font-semibold text-sm line-clamp-2 leading-snug group-hover:text-blue-400 transition-colors">Suvsiz Oʻzbekiston: Orol Fojeasi va Kelajak Avlod Taqdiri | SUBYEKTIV</h3>
+                <div class="flex items-center gap-1 mt-1 text-xs text-gray-400"><span>Subyektiv</span><i class="fa-solid fa-circle-check text-[10px]"></i></div>
+                <div class="flex items-center gap-1.5 text-xs text-gray-400 mt-0.5"><span>1.4 mln ko'rishlar</span><span>•</span><span>3 oy oldin</span></div>
+              </div>
+            </div>
+          </div>
+          <!-- Video Card 3: Osmondagi Bolalar Film -->
+          <div class="video-card cursor-pointer group flex flex-col relative" data-video-id="vid_3">
+            <div class="relative aspect-video w-full rounded-xl overflow-hidden bg-[#202020] mb-3">
+              <img src="https://img.youtube.com/vi/R0k-sQlqL8c/hqdefault.jpg" class="video-card-thumb w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Osmondagi bolalar">
+              <div class="play-overlay absolute inset-0 bg-black/40 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-lg ml-0.5"></i></div>
+              </div>
+              <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[11px] font-semibold px-2 py-0.5 rounded z-10">1:24:10</span>
+            </div>
+            <div class="flex gap-3 px-1">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="w-9 h-9 rounded-full object-cover shrink-0 mt-0.5" alt="O'zbekfilm">
+              <div class="flex-1 min-w-0">
+                <h3 class="font-semibold text-sm line-clamp-2 leading-snug group-hover:text-blue-400 transition-colors">Osmondagi Bolalar (O'zbek Milliy Badiiy Filmi) | To'liq film 1080p HD</h3>
+                <div class="flex items-center gap-1 mt-1 text-xs text-gray-400"><span>O'zbekfilm</span><i class="fa-solid fa-circle-check text-[10px]"></i></div>
+                <div class="flex items-center gap-1.5 text-xs text-gray-400 mt-0.5"><span>5.6 mln ko'rishlar</span><span>•</span><span>6 oy oldin</span></div>
+              </div>
+            </div>
+          </div>
+          <!-- Video Card 4: Sariq Dev Python -->
+          <div class="video-card cursor-pointer group flex flex-col relative" data-video-id="vid_4">
+            <div class="relative aspect-video w-full rounded-xl overflow-hidden bg-[#202020] mb-3">
+              <img src="https://img.youtube.com/vi/R0IZt1O6Gz4/hqdefault.jpg" class="video-card-thumb w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Python Darslari">
+              <div class="play-overlay absolute inset-0 bg-black/40 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow-lg"><i class="fa-solid fa-play text-lg ml-0.5"></i></div>
+              </div>
+              <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[11px] font-semibold px-2 py-0.5 rounded z-10">18:25</span>
+            </div>
+            <div class="flex gap-3 px-1">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="w-9 h-9 rounded-full object-cover shrink-0 mt-0.5" alt="Sariq Dev">
+              <div class="flex-1 min-w-0">
+                <h3 class="font-semibold text-sm line-clamp-2 leading-snug group-hover:text-blue-400 transition-colors">#00 Dasturlash Asoslari: Python Darslariga Kirish | Sariq Dev</h3>
+                <div class="flex items-center gap-1 mt-1 text-xs text-gray-400"><span>Sariq Dev</span><i class="fa-solid fa-circle-check text-[10px]"></i></div>
+                <div class="flex items-center gap-1.5 text-xs text-gray-400 mt-0.5"><span>480 ming ko'rishlar</span><span>•</span><span>1 yil oldin</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Results Found Indicator (Hidden by default) -->
+        <div id="noResults" class="hidden py-16 text-center space-y-3">
+          <i class="fa-solid fa-magnifying-glass text-4xl text-gray-600"></i>
+          <h3 class="text-lg font-semibold text-gray-300">Hech qanday video topilmadi</h3>
+          <p class="text-sm text-gray-500 max-w-md mx-auto">Qidiruv so'zini o'zgartirib ko'ring yoki boshqa toifani tanlang.</p>
+          <button id="resetFilterBtn" class="mt-2 px-4 py-2 bg-[#272727] hover:bg-[#383838] rounded-full text-sm font-medium transition">Barcha videolarga qaytish</button>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 2: WATCH PAGE (VIDEO PLAYER) ================= -->
+      <section id="watchView" class="hidden p-3 md:p-6 max-w-[1700px] mx-auto">
+        <div class="flex flex-col lg:flex-row gap-6">
+
+          <!-- Left Column: Video, Details, Comments -->
+          <div class="flex-1 min-w-0">
+            <!-- Video Player Box (16:9 Aspect Ratio) -->
+            <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-[#272727]">
+              <!-- Real Video Player Container -->
+              <div id="playerContainer" class="w-full h-full">
+                <!-- Video player injected by JS -->
+              </div>
+              <!-- Player mode switcher buttons -->
+              <div class="absolute top-3 right-3 z-30 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-xs select-none">
+                <span class="text-gray-300 text-[11px] mr-1 hidden sm:inline">Format:</span>
+                <button id="playerModeYt" class="px-2.5 py-1 rounded-full font-medium transition bg-red-600 text-white text-[11px]">🔴 YouTube</button>
+                <button id="playerModeHtml5" class="px-2.5 py-1 rounded-full font-medium transition bg-[#282828] text-gray-300 hover:text-white text-[11px]">🎬 Video (MP4)</button>
+              </div>
+            </div>
+
+            <!-- Quick YouTube URL player bar -->
+            <div class="mt-2.5 flex items-center gap-2 bg-[#1c1c1c] border border-[#303030] rounded-xl px-3 py-1.5 text-xs">
+              <i class="fa-brands fa-youtube text-red-600 text-base shrink-0"></i>
+              <input 
+                type="text" 
+                id="quickYtUrlInput" 
+                placeholder="Istalgan YouTube video havolasi (link) yoki ID raqamini kiriting va o'ynating..." 
+                class="flex-1 bg-transparent text-white outline-none placeholder-gray-500 text-xs"
+              />
+              <button id="quickYtPlayBtn" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-3.5 py-1 rounded-lg transition active:scale-95 shrink-0">
+                O'ynatish ▶
+              </button>
+            </div>
+
+            <!-- Video Title & Controls -->
+            <div class="mt-3.5 space-y-3">
+              <h1 id="watchTitle" class="text-lg md:text-xl font-bold text-white leading-snug">Video sarlavhasi bu yerda chiqadi</h1>
+
+              <div class="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-[#272727]">
+                <!-- Channel Info & Subscribe -->
+                <div class="flex items-center gap-3">
+                  <img id="watchChannelAvatar" src="" class="w-10 h-10 rounded-full object-cover border border-gray-700" alt="Channel Avatar">
+                  <div>
+                    <div class="flex items-center gap-1.5">
+                      <span id="watchChannelName" class="font-bold text-sm text-white hover:underline cursor-pointer">Kanal nomi</span>
+                      <i class="fa-solid fa-circle-check text-xs text-gray-400" title="Tasdiqlangan kanal"></i>
+                    </div>
+                    <span id="watchChannelSubs" class="text-xs text-gray-400">125 ming obunachi</span>
+                  </div>
+                  <button id="subscribeBtn" class="ml-2 px-4 py-2 rounded-full font-semibold text-sm transition-all duration-200 bg-white text-black hover:bg-gray-200 active:scale-95">
+                    Obuna bo'lish
+                  </button>
+                </div>
+
+                <!-- Video Action Buttons (Like, Dislike, Share, Save) -->
+                <div class="flex items-center gap-2 flex-wrap">
+                  <!-- Like / Dislike Pill -->
+                  <div class="flex items-center bg-[#272727] rounded-full overflow-hidden border border-transparent hover:border-gray-600 transition">
+                    <button id="likeBtn" class="flex items-center gap-2 px-3.5 py-2 hover:bg-[#383838] transition text-sm font-medium">
+                      <i class="fa-regular fa-thumbs-up" id="likeIcon"></i>
+                      <span id="likeCount">14 ming</span>
+                    </button>
+                    <div class="w-[1px] h-5 bg-[#3f3f3f]"></div>
+                    <button id="dislikeBtn" class="px-3.5 py-2 hover:bg-[#383838] transition text-sm">
+                      <i class="fa-regular fa-thumbs-down" id="dislikeIcon"></i>
+                    </button>
+                  </div>
+
+                  <!-- Share Button -->
+                  <button id="shareBtn" class="flex items-center gap-2 bg-[#272727] hover:bg-[#383838] px-3.5 py-2 rounded-full text-sm font-medium transition active:scale-95">
+                    <i class="fa-solid fa-share"></i>
+                    <span>Ulashish</span>
+                  </button>
+
+                  <!-- Watch Later / Save Button -->
+                  <button id="saveBtn" class="flex items-center gap-2 bg-[#272727] hover:bg-[#383838] px-3.5 py-2 rounded-full text-sm font-medium transition active:scale-95">
+                    <i class="fa-regular fa-bookmark" id="saveIcon"></i>
+                    <span>Saqlash</span>
+                  </button>
+
+                  <!-- Back to Home -->
+                  <button id="backToHomeBtn" class="flex items-center gap-1.5 bg-[#272727] hover:bg-[#383838] px-3 py-2 rounded-full text-xs font-medium text-gray-300 hover:text-white transition" title="Ortga qaytish">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span class="hidden sm:inline">Ortga</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Description Box -->
+              <div id="descriptionBox" class="bg-[#222222] hover:bg-[#282828] rounded-xl p-3.5 cursor-pointer transition text-sm select-text">
+                <div class="flex items-center gap-3 font-semibold text-xs text-gray-200 mb-1">
+                  <span id="watchViewsCount">240,512 ko'rishlar</span>
+                  <span id="watchUploadDate">2 kun oldin</span>
+                  <div id="watchTags" class="flex gap-2 text-blue-400 font-normal">
+                    <span>#uzbekistan</span>
+                    <span>#it</span>
+                  </div>
+                </div>
+                <p id="watchDescriptionText" class="text-gray-300 text-xs md:text-sm whitespace-pre-line line-clamp-3 leading-relaxed">
+                  Video tavsifi bu yerda ko'rinadi...
+                </p>
+                <button id="toggleDescBtn" class="text-xs font-bold text-white mt-2 hover:underline">
+                  Ko'proq ko'rsatish
+                </button>
+              </div>
+
+              <!-- Comments Section -->
+              <div class="pt-4">
+                <div class="flex items-center gap-6 mb-4">
+                  <h3 class="font-bold text-base md:text-lg"><span id="commentsCountDisplay">24</span> ta Izoh</h3>
+                  <button class="flex items-center gap-2 text-xs font-semibold text-gray-300 hover:text-white">
+                    <i class="fa-solid fa-arrow-down-short-wide"></i> Saralash
+                  </button>
+                </div>
+
+                <!-- Add Comment Input Form -->
+                <div class="flex gap-3 mb-6">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120" class="w-10 h-10 rounded-full object-cover shrink-0" alt="My Avatar">
+                  <div class="flex-1">
+                    <input 
+                      type="text" 
+                      id="commentInput" 
+                      placeholder="Izoh qoldiring..." 
+                      class="w-full bg-transparent border-b border-gray-600 focus:border-white outline-none pb-1 text-sm text-white placeholder-gray-500 transition-colors"
+                    />
+                    <div id="commentActions" class="hidden justify-end gap-2 mt-2">
+                      <button id="cancelCommentBtn" class="px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-[#272727] text-gray-300 transition">
+                        Bekor qilish
+                      </button>
+                      <button id="submitCommentBtn" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition" disabled>
+                        Izoh qoldirish
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Comments List -->
+                <div id="commentsList" class="space-y-4">
+                  <!-- Injected via JavaScript -->
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right Column: Related Videos (Watch Next) -->
+          <div class="w-full lg:w-96 xl:w-[410px] shrink-0 space-y-3">
+            <h3 class="font-bold text-sm text-gray-300 px-1">Tavsiya etiladigan videolar</h3>
+            <div id="relatedVideosList" class="space-y-3">
+              <!-- Injected via JavaScript -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= VIEW 3: SHORTS REEL ================= -->
+      <section id="shortsView" class="hidden p-3 md:p-6 flex flex-col items-center justify-center min-h-[calc(100vh-3.5rem)]">
+        
+        <!-- Top Controls: Format Switcher & Quick Short URL -->
+        <div class="w-full max-w-[420px] mb-3 space-y-2">
+          <!-- Format Switcher -->
+          <div class="flex items-center justify-between bg-[#1f1f1f] border border-[#333] px-3 py-1.5 rounded-2xl text-xs">
+            <span class="text-gray-400 font-medium text-[11px]">Shorts Formati:</span>
+            <div class="flex items-center gap-1.5">
+              <button id="shortsModeYt" class="px-2.5 py-1 rounded-full font-medium transition bg-red-600 text-white text-[11px]">🔴 YouTube</button>
+              <button id="shortsModeHtml5" class="px-2.5 py-1 rounded-full font-medium transition bg-[#2a2a2a] text-gray-300 hover:text-white text-[11px]">🎬 Video (MP4)</button>
+            </div>
+          </div>
+
+          <!-- Quick Shorts URL bar -->
+          <div class="flex items-center gap-2 bg-[#1f1f1f] border border-[#333] rounded-2xl px-3 py-1.5 text-xs">
+            <i class="fa-solid fa-bolt text-red-500 shrink-0"></i>
+            <input 
+              type="text" 
+              id="quickShortsUrlInput" 
+              placeholder="YouTube Short linki yoki ID..." 
+              class="flex-1 bg-transparent text-white outline-none placeholder-gray-500 text-xs"
+            />
+            <button id="quickShortsPlayBtn" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-2.5 py-1 rounded-xl transition text-xs shrink-0">
+              O'ynatish
+            </button>
+          </div>
+        </div>
+
+        <!-- Shorts Vertical Video Player Box -->
+        <div class="relative w-full max-w-[420px] h-[75vh] bg-black rounded-3xl overflow-hidden shadow-2xl border border-[#333] flex flex-col justify-end p-5 select-none">
+          <!-- Shorts Video / Background -->
+          <div id="shortsVideoPlayer" class="absolute inset-0 z-0">
+            <!-- Shorts Player -->
+          </div>
+
+          <!-- Gradient overlay for readability (pointer-events-none to let touches pass) -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/20 z-10 pointer-events-none"></div>
+
+          <!-- Shorts Counter Badge -->
+          <div class="absolute top-4 left-4 z-20 bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-1 rounded-full border border-white/10">
+            <span id="shortsCounter">1 / 5</span>
+          </div>
+
+          <!-- Sound Mute/Unmute toggle button (for HTML5) -->
+          <button id="shortsSoundToggleBtn" class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/80 transition" title="Ovozni yoqish / o'chirish">
+            <i class="fa-solid fa-volume-high text-xs" id="shortsSoundIcon"></i>
+          </button>
+
+          <!-- Shorts Content Overlay -->
+          <div class="relative z-20 space-y-2 text-white max-w-[80%] pb-1 pointer-events-none">
+            <div class="flex items-center gap-2.5 pointer-events-auto">
+              <img id="shortsAvatar" src="" class="w-9 h-9 rounded-full border border-white/50 object-cover" alt="Channel">
+              <span id="shortsChannel" class="font-bold text-xs md:text-sm text-white truncate">@kanal_nomi</span>
+              <button id="shortsSubBtn" class="bg-red-600 hover:bg-red-700 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full transition shrink-0">
+                Obuna
+              </button>
+            </div>
+            <p id="shortsTitle" class="text-xs md:text-sm font-medium leading-snug line-clamp-2">Shorts videosining qiziqarli sarlavhasi</p>
+            <div class="flex items-center gap-1.5 text-[11px] text-gray-300">
+              <i class="fa-solid fa-music text-[9px]"></i>
+              <span id="shortsSound" class="truncate">Asl audio - O'zbek Music 2026</span>
+            </div>
+          </div>
+
+          <!-- Floating Action Buttons on the Right -->
+          <div class="absolute right-3 bottom-8 z-20 flex flex-col items-center gap-3.5 text-white">
+            <!-- Prev Short -->
+            <button id="prevShortBtn" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 flex items-center justify-center text-white transition active:scale-90" title="Oldingi Short">
+              <i class="fa-solid fa-chevron-up text-sm"></i>
+            </button>
+
+            <!-- Like -->
+            <button id="shortsLikeBtn" class="flex flex-col items-center group">
+              <div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:bg-white/20 transition active:scale-90">
+                <i class="fa-solid fa-thumbs-up text-base text-white" id="shortsLikeIcon"></i>
+              </div>
+              <span id="shortsLikeCount" class="text-[10px] font-semibold mt-1">45K</span>
+            </button>
+
+            <!-- Dislike -->
+            <button id="shortsDislikeBtn" class="flex flex-col items-center group">
+              <div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:bg-white/20 transition active:scale-90">
+                <i class="fa-solid fa-thumbs-down text-base text-white"></i>
+              </div>
+              <span class="text-[10px] font-semibold mt-1">Yoqmadi</span>
+            </button>
+
+            <!-- Comment -->
+            <button id="shortsCommentBtn" class="flex flex-col items-center group">
+              <div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:bg-white/20 transition active:scale-90">
+                <i class="fa-solid fa-comment-dots text-base text-white"></i>
+              </div>
+              <span class="text-[10px] font-semibold mt-1">1.2K</span>
+            </button>
+
+            <!-- Share -->
+            <button id="shortsShareBtn" class="flex flex-col items-center group">
+              <div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:bg-white/20 transition active:scale-90">
+                <i class="fa-solid fa-share text-base text-white"></i>
+              </div>
+              <span class="text-[10px] font-semibold mt-1">Ulashish</span>
+            </button>
+
+            <!-- Next Short -->
+            <button id="nextShortBtn" class="w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 shadow-lg flex items-center justify-center text-white transition active:scale-90" title="Keyingi Short">
+              <i class="fa-solid fa-chevron-down text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 4: HISTORY / LIKED / SUBSCRIPTIONS ================= -->
+      <section id="collectionListView" class="hidden p-4 md:p-6 max-w-5xl mx-auto">
+        <div class="flex items-center justify-between pb-4 border-b border-[#272727] mb-6">
+          <div class="flex items-center gap-3">
+            <div id="collectionIcon" class="w-10 h-10 rounded-full bg-red-600/20 text-red-500 flex items-center justify-center text-xl">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <div>
+              <h1 id="collectionTitle" class="text-xl md:text-2xl font-bold">Ko'rishlar tarixi</h1>
+              <p id="collectionSubtitle" class="text-xs text-gray-400">Siz tomosha qilgan barcha videolar</p>
+            </div>
+          </div>
+          <button id="clearCollectionBtn" class="px-3.5 py-1.5 bg-[#272727] hover:bg-[#383838] text-xs font-semibold rounded-full transition text-gray-300 hover:text-white">
+            Tarixni tozalash
+          </button>
+        </div>
+
+        <div id="collectionGrid" class="space-y-4">
+          <!-- Populated by JS -->
+        </div>
+
+        <div id="collectionEmpty" class="hidden py-16 text-center space-y-3">
+          <i class="fa-regular fa-folder-open text-4xl text-gray-600"></i>
+          <h3 class="text-base font-semibold text-gray-400">Hozircha hech qanday video yo'q</h3>
+          <p class="text-xs text-gray-500">Videolarni tomosha qiling yoki yoqtirganlaringizga qo'shing.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= MODAL: CREATE / UPLOAD VIDEO ================= -->
+  <div id="uploadModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#212121] border border-[#3f3f3f] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-scale-up">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between p-4 border-b border-[#333]">
+        <div class="flex items-center gap-2">
+          <i class="fa-brands fa-youtube text-red-600 text-2xl"></i>
+          <h3 class="font-bold text-base">Yangi Video Yuklash</h3>
+        </div>
+        <button id="closeUploadModalBtn" class="text-gray-400 hover:text-white p-1 rounded-full hover:bg-[#333] transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Form -->
+      <form id="uploadVideoForm" class="p-5 space-y-4 text-xs md:text-sm">
+        <div>
+          <label class="block text-gray-300 font-semibold mb-1">Video sarlavhasi *</label>
+          <input 
+            type="text" 
+            id="newVideoTitle" 
+            required 
+            placeholder="Masalan: JavaScript To'liq Darsi 2026" 
+            class="w-full bg-[#141414] border border-[#383838] rounded-xl px-3.5 py-2 text-white outline-none focus:border-red-500"
+          />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-gray-300 font-semibold mb-1">Kanal nomi *</label>
+            <input 
+              type="text" 
+              id="newChannelName" 
+              required 
+              placeholder="Masalan: Mohirdev" 
+              class="w-full bg-[#141414] border border-[#383838] rounded-xl px-3.5 py-2 text-white outline-none focus:border-red-500"
+            />
+          </div>
+          <div>
+            <label class="block text-gray-300 font-semibold mb-1">Kategoriya *</label>
+            <select id="newCategory" class="w-full bg-[#141414] border border-[#383838] rounded-xl px-3.5 py-2 text-white outline-none focus:border-red-500">
+              <option value="dasturlash">Dasturlash</option>
+              <option value="ai">Sun'iy Intellekt</option>
+              <option value="musiqa">Musiqa</option>
+              <option value="oyinlar">O'yinlar</option>
+              <option value="yangiliklar">Yangiliklar</option>
+              <option value="talim">Ta'lim</option>
+              <option value="sayohat">Sayohat & Tabiat</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-gray-300 font-semibold mb-1">YouTube Video Havolasi yoki ID *</label>
+          <input 
+            type="text" 
+            id="newVideoUrl" 
+            required 
+            placeholder="Masalan: https://www.youtube.com/watch?v=dQw4w9WgXcQ yoki ID" 
+            class="w-full bg-[#141414] border border-[#383838] rounded-xl px-3.5 py-2 text-white outline-none focus:border-red-500"
+          />
+          <p class="text-[11px] text-gray-500 mt-1">Har qanday YouTube video havolasi yoki ID raqamini kiritishingiz mumkin.</p>
+        </div>
+
+        <div>
+          <label class="block text-gray-300 font-semibold mb-1">Muqova rasm URL (Thumbnail)</label>
+          <input 
+            type="url" 
+            id="newThumbnailUrl" 
+            placeholder="Ixtiyoriy rasm havolasi (bo'sh qolsa avtomatik tanlanadi)" 
+            class="w-full bg-[#141414] border border-[#383838] rounded-xl px-3.5 py-2 text-white outline-none focus:border-red-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-gray-300 font-semibold mb-1">Tavsif (Description)</label>
+          <textarea 
+            id="newVideoDesc" 
+            rows="2" 
+            placeholder="Video haqida qisqacha ma'lumot..." 
+            class="w-full bg-[#141414] border border-[#383838] rounded-xl px-3.5 py-2 text-white outline-none focus:border-red-500 resize-none"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t border-[#333]">
+          <button type="button" id="cancelUploadBtn" class="px-4 py-2 rounded-xl text-gray-300 hover:bg-[#2e2e2e] transition font-medium">
+            Bekor qilish
+          </button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold transition active:scale-95 shadow-lg shadow-red-600/30">
+            Yuklash va Joylash
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: SHARE ================= -->
+  <div id="shareModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#212121] border border-[#3f3f3f] rounded-2xl w-full max-w-md shadow-2xl p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base">Videoni ulashish</h3>
+        <button id="closeShareModalBtn" class="text-gray-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Social Icons -->
+      <div class="grid grid-cols-4 gap-3 text-center">
+        <a href="https://t.me/share/url?url=https://youtube.com" target="_blank" class="p-3 rounded-xl bg-[#2a2a2a] hover:bg-blue-600/30 transition flex flex-col items-center gap-1.5 group">
+          <i class="fa-brands fa-telegram text-2xl text-blue-400 group-hover:scale-110 transition"></i>
+          <span class="text-[11px] text-gray-300">Telegram</span>
+        </a>
+        <a href="https://api.whatsapp.com/send?text=YouTube" target="_blank" class="p-3 rounded-xl bg-[#2a2a2a] hover:bg-emerald-600/30 transition flex flex-col items-center gap-1.5 group">
+          <i class="fa-brands fa-whatsapp text-2xl text-emerald-400 group-hover:scale-110 transition"></i>
+          <span class="text-[11px] text-gray-300">WhatsApp</span>
+        </a>
+        <a href="https://twitter.com/intent/tweet" target="_blank" class="p-3 rounded-xl bg-[#2a2a2a] hover:bg-sky-600/30 transition flex flex-col items-center gap-1.5 group">
+          <i class="fa-brands fa-x-twitter text-2xl text-white group-hover:scale-110 transition"></i>
+          <span class="text-[11px] text-gray-300">X (Twitter)</span>
+        </a>
+        <a href="https://www.facebook.com/sharer/sharer.php" target="_blank" class="p-3 rounded-xl bg-[#2a2a2a] hover:bg-blue-700/30 transition flex flex-col items-center gap-1.5 group">
+          <i class="fa-brands fa-facebook text-2xl text-blue-500 group-hover:scale-110 transition"></i>
+          <span class="text-[11px] text-gray-300">Facebook</span>
+        </a>
+      </div>
+
+      <!-- Copy link container -->
+      <div class="space-y-1.5">
+        <label class="text-xs text-gray-400 font-medium">Havoladan nusxa olish:</label>
+        <div class="flex items-center bg-[#151515] border border-[#383838] rounded-xl px-3 py-1.5">
+          <input type="text" id="shareLinkInput" readonly class="w-full bg-transparent text-xs text-gray-300 outline-none" value="">
+          <button id="copyShareLinkBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition shrink-0 ml-2">
+            Nusxalash
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION ================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-[#222222] border border-[#444] text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <i class="fa-solid fa-circle-check text-green-500 text-lg" id="toastIcon"></i>
+    <span id="toastMessage" class="text-xs md:text-sm font-medium">Muvaffaqiyatli bajarildi!</span>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="app.js"></script>
+</body>
+</html>

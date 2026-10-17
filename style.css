@@ -1,0 +1,212 @@
+/* YouTube Clone Custom Stylesheet */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Oswald:wght@600;700&display=swap');
+
+body {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #0F0F0F;
+  color: #FFFFFF;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #424242;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #606060;
+}
+
+/* Hide scrollbar for category pills while maintaining scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Video Grid layout fallback */
+#videoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.75rem 1rem;
+}
+
+@media (max-width: 640px) {
+  #videoGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Video Card Thumbnail Hover effect */
+.video-card-thumb {
+  transition: transform 0.25s ease, border-radius 0.25s ease;
+}
+
+.video-card:hover .video-card-thumb {
+  border-radius: 0.5rem;
+  transform: scale(1.03);
+}
+
+.video-card .play-overlay {
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: scale(0.9);
+}
+
+.video-card:hover .play-overlay {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Subscribed State */
+.subscribed-btn {
+  background-color: #272727 !important;
+  color: #f1f1f1 !important;
+}
+
+/* Light Mode Overrides */
+html:not(.dark) body {
+  background-color: #FFFFFF !important;
+  color: #0F0F0F !important;
+}
+
+html:not(.dark) header {
+  background-color: #FFFFFF !important;
+  border-bottom-color: #E5E5E5 !important;
+}
+
+html:not(.dark) header .text-white {
+  color: #0F0F0F !important;
+}
+
+html:not(.dark) #mainSidebar,
+html:not(.dark) #miniSidebar {
+  background-color: #FFFFFF !important;
+  border-right-color: #E5E5E5 !important;
+}
+
+html:not(.dark) .nav-item:hover,
+html:not(.dark) .mini-nav-item:hover {
+  background-color: #F2F2F2 !important;
+}
+
+html:not(.dark) .nav-item.active,
+html:not(.dark) .mini-nav-item.active {
+  background-color: #F2F2F2 !important;
+  font-weight: 600;
+}
+
+html:not(.dark) #searchForm div {
+  background-color: #FFFFFF !important;
+  border-color: #CCCCCC !important;
+}
+
+html:not(.dark) #searchInput {
+  color: #0F0F0F !important;
+}
+
+html:not(.dark) #searchForm button {
+  background-color: #F8F8F8 !important;
+  border-color: #CCCCCC !important;
+}
+
+html:not(.dark) #createVideoBtn,
+html:not(.dark) #voiceSearchBtn {
+  background-color: #F2F2F2 !important;
+  color: #0F0F0F !important;
+}
+
+html:not(.dark) #categoryPillsContainer {
+  background-color: #FFFFFF !important;
+}
+
+html:not(.dark) .category-pill {
+  background-color: #F2F2F2 !important;
+  color: #0F0F0F !important;
+}
+
+html:not(.dark) .category-pill.active {
+  background-color: #0F0F0F !important;
+  color: #FFFFFF !important;
+}
+
+html:not(.dark) #descriptionBox {
+  background-color: #F2F2F2 !important;
+}
+
+html:not(.dark) #descriptionBox * {
+  color: #333333 !important;
+}
+
+html:not(.dark) #likeBtn,
+html:not(.dark) #dislikeBtn,
+html:not(.dark) #shareBtn,
+html:not(.dark) #saveBtn,
+html:not(.dark) #backToHomeBtn {
+  background-color: #F2F2F2 !important;
+  color: #0F0F0F !important;
+}
+
+html:not(.dark) #subscribeBtn {
+  background-color: #0F0F0F !important;
+  color: #FFFFFF !important;
+}
+
+html:not(.dark) #subscribeBtn.subscribed {
+  background-color: #E5E5E5 !important;
+  color: #0F0F0F !important;
+}
+
+/* Animations */
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Mobile Sidebar Drawer */
+@media (max-width: 768px) {
+  #mainSidebar {
+    transform: translateX(-100%);
+  }
+  #mainSidebar.open {
+    transform: translateX(0);
+    box-shadow: 10px 0 25px rgba(0, 0, 0, 0.5);
+  }
+  #mainContent {
+    margin-left: 0 !important;
+  }
+}
+
+/* Mini Sidebar Mode (when collapsed on desktop) */
+body.sidebar-collapsed #mainSidebar {
+  display: none !important;
+}
+
+body.sidebar-collapsed #miniSidebar {
+  display: flex !important;
+}
+
+body.sidebar-collapsed #mainContent {
+  margin-left: 4.5rem !important;
+}
